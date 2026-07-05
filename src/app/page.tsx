@@ -1,11 +1,17 @@
 import React from "react";
+import { supabase } from "@/lib/supabase";
 
-export default function Home() {
-  const clients = [
-    { name: "Amin", paid: 2000, spendPerDay: 525, currency: "BDT" },
-    { name: "Nahida", paid: 2000, spendPerDay: 450, currency: "BDT" },
-    { name: "Blues guitar", paid: 1000, spendPerDay: 300, currency: "BDT" },
-  ];
+export const revalidate = 0; // Disable static caching so the dashboard is always live
+
+export default async function Home() {
+  // Fetch from the real Supabase database!
+  const { data: clients, error } = await supabase
+    .from('clients')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  const activeClients = clients || [];
+  const totalSpend = activeClients.reduce((acc, c) => acc + (c.daily_spend || 0), 0);
 
   return (
     <main className="min-h-screen bg-gray-50 text-gray-900 p-8">
@@ -18,15 +24,17 @@ export default function Home() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h3 className="text-gray-500 text-sm font-semibold uppercase">Active Clients</h3>
-            <p className="text-3xl font-black mt-2">{clients.length}</p>
+            <p className="text-3xl font-black mt-2">{activeClients.length}</p>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h3 className="text-gray-500 text-sm font-semibold uppercase">Daily Ad Spend</h3>
-            <p className="text-3xl font-black mt-2">{clients.reduce((acc, c) => acc + c.spendPerDay, 0)} BDT</p>
+            <p className="text-3xl font-black mt-2">{totalSpend} BDT</p>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h3 className="text-gray-500 text-sm font-semibold uppercase">System Status</h3>
-            <p className="text-3xl font-black mt-2 text-green-500">Live ⚡</p>
+            <p className={`text-3xl font-black mt-2 ${error ? 'text-red-500' : 'text-green-500'}`}>
+              {error ? 'DB Error ⚠️' : 'Live ⚡'}
+            </p>
           </div>
         </section>
 
@@ -44,14 +52,20 @@ export default function Home() {
               </tr>
             </thead>
             <tbody>
-              {clients.map((client, idx) => (
+              {activeClients.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-8 px-6 text-center text-gray-500">
+                    No clients found in the database. Run the SQL script in Supabase!
+                  </td>
+                </tr>
+              ) : activeClients.map((client, idx) => (
                 <tr key={idx} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition">
                   <td className="py-4 px-6 font-medium">{client.name}</td>
-                  <td className="py-4 px-6 text-gray-600">{client.paid} {client.currency}</td>
-                  <td className="py-4 px-6 text-gray-600">{client.spendPerDay} {client.currency}/day</td>
+                  <td className="py-4 px-6 text-gray-600">{client.total_paid} {client.currency}</td>
+                  <td className="py-4 px-6 text-gray-600">{client.daily_spend} {client.currency}/day</td>
                   <td className="py-4 px-6">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      Active
+                      {client.status || 'Active'}
                     </span>
                   </td>
                 </tr>
