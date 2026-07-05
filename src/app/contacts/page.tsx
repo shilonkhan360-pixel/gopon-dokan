@@ -1,5 +1,6 @@
 import React from "react";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 
 export const revalidate = 0;
 
@@ -10,7 +11,7 @@ export default async function Contacts() {
     <main>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Contact Management</h1>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm font-medium">+ Add Contact</button>
+        <Link href="/contacts/new" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm font-medium transition">+ Add Contact</Link>
       </div>
       
       <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

@@ -1,6 +1,12 @@
 import Link from 'next/link';
+import { logout } from '@/app/actions';
+import { cookies } from 'next/headers';
 
 export default function Navigation() {
+  const authCookie = cookies().get('crm_auth');
+  
+  if (!authCookie) return null; // Hide nav on login page
+
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,6 +22,11 @@ export default function Navigation() {
               <Link href="/pipeline" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Pipeline</Link>
               <Link href="/contacts" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Contacts</Link>
             </div>
+          </div>
+          <div className="flex items-center">
+            <form action={logout}>
+              <button type="submit" className="text-sm font-bold text-red-600 hover:text-red-800 transition">Logout</button>
+            </form>
           </div>
         </div>
       </div>
