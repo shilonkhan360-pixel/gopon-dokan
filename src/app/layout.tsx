@@ -6,8 +6,8 @@ import Navigation from "@/components/Navigation";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NEW CRM SHILON",
-  description: "Digital Marketing CRM",
+  title: "Gopon Dokan | E-Commerce",
+  description: "Discreet and reliable.",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-gray-50 text-gray-900 min-h-screen flex flex-col`}>
         <Navigation />
-        <div className="flex-1 w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div className="flex-1 w-full mx-auto">
           {children}
         </div>
       </body>

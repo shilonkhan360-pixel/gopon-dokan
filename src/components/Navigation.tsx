@@ -4,8 +4,6 @@ import { cookies } from 'next/headers';
 
 export default function Navigation() {
   const authCookie = cookies().get('crm_auth');
-  
-  if (!authCookie) return null; // Hide nav on login page
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -13,20 +11,23 @@ export default function Navigation() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <span className="font-black text-blue-700 text-2xl tracking-tight">CRM</span>
+              <Link href="/">
+                <span className="font-black text-blue-700 text-2xl tracking-tight">Gopon Dokan</span>
+              </Link>
             </div>
             <div className="hidden sm:-my-px sm:ml-8 sm:flex sm:space-x-8">
-              <Link href="/" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Dashboard</Link>
-              <Link href="/customers" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Customers</Link>
-              <Link href="/leads" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Leads</Link>
-              <Link href="/pipeline" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Pipeline</Link>
-              <Link href="/contacts" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Contacts</Link>
+              <Link href="/" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Shop</Link>
+              <Link href="/admin" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-blue-500 text-sm font-medium text-gray-500 hover:text-gray-900">Admin Panel</Link>
             </div>
           </div>
-          <div className="flex items-center">
-            <form action={logout}>
-              <button type="submit" className="text-sm font-bold text-red-600 hover:text-red-800 transition">Logout</button>
-            </form>
+          <div className="flex items-center space-x-4">
+            {!authCookie ? (
+              <Link href="/login" className="text-sm font-bold text-blue-600 hover:text-blue-800 transition">Admin Login</Link>
+            ) : (
+              <form action={logout}>
+                <button type="submit" className="text-sm font-bold text-red-600 hover:text-red-800 transition">Logout</button>
+              </form>
+            )}
           </div>
         </div>
       </div>
